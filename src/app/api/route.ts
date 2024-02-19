@@ -15,12 +15,16 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { title, filename }: any = body;
 
-    let fileContent = createWriteStream(`tmp/${filename}.txt`, 'utf8');
+    let writeStream = createWriteStream(`tmp/${filename}.txt`, 'utf8');
 
-    fileContent.write(title);
+    writeStream.write(title);
 
-    return NextResponse.json({
-      msg: `File ${filename} saved to tmp folder.`,
+    writeStream.on('finish', function () {
+      const fileContent = readFileSync(`/tmp/${filename}.pdf`);
+      return NextResponse.json({
+        msg: `File ${filename} saved to tmp folder.`,
+        raw: JSON.stringify(fileContent),
+      });
     });
   } catch (error: any) {
     throw new Error(error?.message as string);
