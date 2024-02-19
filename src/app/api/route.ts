@@ -1,4 +1,5 @@
 import { createWriteStream, readFileSync } from 'fs';
+import { promises as fs } from 'fs';
 import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 
@@ -15,16 +16,11 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { title, filename }: any = body;
 
-    let writeStream = createWriteStream(`/tmp/${filename}.txt`, 'utf8');
+    const path = `tmp/${filename}.txt`; // Define upload path
+    await fs.writeFile(path, title); // Write file
 
-    writeStream.write(title);
-
-    writeStream.on('finish', function () {
-      const fileContent = readFileSync(`/tmp/${filename}.pdf`);
-      return NextResponse.json({
-        msg: `File ${filename} saved to tmp folder.`,
-        raw: JSON.stringify(fileContent),
-      });
+    return NextResponse.json({
+      msg: `File ${filename} saved to tmp folder.`,
     });
   } catch (error: any) {
     throw new Error(error?.message as string);
