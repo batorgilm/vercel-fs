@@ -6,7 +6,7 @@ import path from 'path';
 export async function GET(req: NextRequest) {
   const filename = req.nextUrl.searchParams.get('filename');
 
-  const file = path.join(process.cwd(), 'tmp', filename as string);
+  const file = path.join(process.cwd(), 'public', filename as string);
   const stringField = readFileSync(file, 'utf8');
   return NextResponse.json({ message: stringField });
 }
@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { title, filename }: any = body;
 
-    const path = `tmp/${filename}.txt`; // Define upload path
+    const path = `public/${filename}.txt`; // Define upload path
     await fs.writeFile(path, title); // Write file
 
     return NextResponse.json({
