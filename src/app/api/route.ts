@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { title, filename }: any = body;
 
-    let writeStream = createWriteStream(`tmp/${filename}.txt`, 'utf8');
+    let writeStream = createWriteStream(`/tmp/${filename}.txt`, 'utf8');
 
     writeStream.write(title);
 
